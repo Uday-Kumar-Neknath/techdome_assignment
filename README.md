@@ -22,24 +22,30 @@ The application is composed of three primary components:
 **2. Deployment Strategy for Docker**
 
 **Containerization Overview:**
-This application consists of the following components:
-    1. Frontend (React.js application, running on Node.js)
-    2. Backend (Node.js API, connecting to MongoDB)
+
+**This application consists of the following components:**  
+1. Frontend (React.js application, running on Node.js)  
+    2. Backend (Node.js API, connecting to MongoDB)  
     3. MongoDB (MongoDB database used for data storage)
-Each of these components will be containerized in separate Docker containers. The frontend and backend will be built into Docker images and run on a Docker network, allowing the backend to interact with the MongoDB database container.
+
+Each of these components will be containerized in separate Docker containers. The frontend and backend will be built into Docker images and run on a Docker network, allowing the backend to interact with the MongoDB database container.  
 By using Docker Compose, we can easily deploy and manage a multi-container application. Docker allows you to define each service’s configuration (frontend, backend, and MongoDB) in a docker-compose.yml file and build a consistent environment that can be easily replicated across different environments. This strategy makes it easy to scale, update, and manage the entire application stack in a unified and automated way.
 
 **3. Deployment Strategy using local Kubernetes cluster using Minikube through docker**
-    **1. Kubernetes Deployment**
+
+ **1. Kubernetes Deployment**
         ◦ The application is deployed on Kubernetes using Deployment and Service resources for both frontend and backend components.
         ◦ The backend is connected to MongoDB through a Kubernetes service named database-service, while the frontend communicates with the backend via its exposed service endpoint.
-    **2. Services**
+   
+ **2. Services**
         ◦ Frontend Service: Exposed as a ClusterIP service on port 80, routing traffic to the frontend container's port 3000.
         ◦ Backend Service: Exposed as a ClusterIP service on port 5000, routing traffic to the backend container's port 5000.
         ◦ MongoDB Service: A ClusterIP service internally connects the backend to the MongoDB database on port 27017.
-    **3. Pod Management**
+
+**3. Pod Management**
         ◦ Each service (frontend, backend, and database) is managed using Kubernetes Pods, ensuring high availability and ease of scaling.
-    **4. Environment Variables**
+
+ **4. Environment Variables**
         ◦ Frontend: The REACT_APP_BASE_URL environment variable is set to the backend service endpoint (http://backend-service:5000/api).
         ◦ Backend: The DB environment variable is set to the MongoDB service URL (mongodb://database-service:27017/techdome).
 
@@ -102,7 +108,7 @@ Prepare a docker-compose.yml file for defining the application architecture:
 **Code Link:** https://github.com/Uday-Kumar-Neknath/techdome_assignment/blob/main/docker-compose.yml
 
 
-6. Verify:
+**6. Verify:**
 Backend: Accessible at http://localhost:5000.         
 Frontend: Accessible at http://localhost:3000.
 
@@ -111,22 +117,29 @@ Frontend: Accessible at http://localhost:3000.
 **Step 1: Start Minikube --drive=docker**
 Initialize a local Kubernetes cluster:
 minikube start --driver=docker
+
 **Step 2: Create Kubernetes Manifests**
 Prepare YAML files for each service (use the Dockerfile images built earlier):
-    • Backend Deployment (backend-deployment.yaml):
-    **Code Link:** https://github.com/Uday-Kumar-Neknath/techdome_assignment/blob/main/techdome-backend-deployment.yaml
-    • Frontend Deployment (frontend-deployment.yaml):
+
+• Backend Deployment (backend-deployment.yaml):
+**Code Link:** https://github.com/Uday-Kumar-Neknath/techdome_assignment/blob/main/techdome-backend-deployment.yaml
+  
+• Frontend Deployment (frontend-deployment.yaml):
 **Code Link:**  https://github.com/Uday-Kumar-Neknath/techdome_assignment/blob/main/techdome-frontend-deployment.yaml
-   • MongoDB Deployment (database-deployment.yaml):
+  
+• MongoDB Deployment (database-deployment.yaml):
 **Code Link:**  https://github.com/Uday-Kumar-Neknath/techdome_assignment/blob/main/techdome-database-deployment.yaml
+
 **Step 3: Deploy the services:**
 kubectl apply -f backend-deployment.yaml
 kubectl apply -f frontend-deployment.yaml
 kubectl apply -f database-deployment.yaml
+
 **Step 4: Verify Deployment**
 Check the status of the pods and services:
 kubectl get pods -A
 kubectl get services -o wide
+
 **step 5: Verify by accessing UI:**
 Access the frontend: <clusterip>:3000
 Access the backend: <clusterip>:5000
