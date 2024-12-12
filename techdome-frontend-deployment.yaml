@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techdome-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: techdome-frontend
+  template:
+    metadata:
+      labels:
+        app: techdome-frontend
+    spec:
+      containers:
+      - name: techdome-frontend
+        image: udaykumar1234/techdome-frontend:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_BASE_URL
+          value: "http://backend-service:5000/api"  # Updated to use backend-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: techdome-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: ClusterIP
+

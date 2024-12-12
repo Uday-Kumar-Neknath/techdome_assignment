@@ -1,0 +1,22 @@
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const Signup = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // some logic involving navigate
+    if (/* some condition */) {
+      navigate('/dashboard');
+    }
+  }, []);  // Missing 'navigate' in the dependency array
+
+  return (
+    <div>
+      {/* Your JSX */}
+    </div>
+  );
+};
+
+export default Signup;
+

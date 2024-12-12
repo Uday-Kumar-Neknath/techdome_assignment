@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techdome-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: techdome-backend
+  template:
+    metadata:
+      labels:
+        app: techdome-backend
+    spec:
+      containers:
+      - name: techdome-backend
+        image: udaykumar1234/techdome-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: PORT
+          value: "5000"
+        - name: DB
+          value: "mongodb://database-service:27017/techdome"  # Updated DB URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: techdome-backend
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
+
